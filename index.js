@@ -5,8 +5,8 @@ const prompt = require("prompt-sync")();
 
 // Your functions here
 
-/*************************************************************************************************************/
 // function 1:
+/********************************************************************************/
 const getUniqueAuthors = (recipes) => {
   const uniqueAuthors = [];
   recipes.forEach((recipe) => {
@@ -15,29 +15,36 @@ const getUniqueAuthors = (recipes) => {
   });
   return uniqueAuthors;
 };
+/********************************************************************************/
 
-/************************************************************************************************************/
 // function 2:
+/********************************************************************************/
 const getAllRecipeNames = (recipes) => {
   if (recipes) {
-    console.log(recipes.map(({ Name }) => `${Name}`));
-    // console.log(getRecipeNames);
+    const recipeNames = recipes.map(({ Name }) => `${Name}`);
+    console.log(recipeNames);
   } else {
     console.log("There are no recipes found!");
   }
 };
+/*******************************************************************************/
 
-/**************************************************************************************************/
 // function 3:
+/********************************************************************************/
 const getRecipesFromAuthor = (recipes, author) => {
+  const authorRecipes = [];
   const filterAuthorRecipe = recipes.filter(
     (recipe) => recipe.Author === author
   );
-  return filterAuthorRecipe;
+  filterAuthorRecipe.forEach((recipe) => {
+    authorRecipes.push(recipe.Name);
+  });
+  return authorRecipes;
 };
+/********************************************************************************/
 
-/********************************************************************************************************/
 // function 4:
+/********************************************************************************/
 const getRecipeFromIngredient = (recipes, ingredient) => {
   const filteredRecipeList = [];
   const filterRecipes = recipes.filter((recipe) =>
@@ -48,25 +55,27 @@ const getRecipeFromIngredient = (recipes, ingredient) => {
   });
   return filteredRecipeList;
 };
-console.log(getRecipeFromIngredient(cakeRecipes, "140g caster sugar"));
+/*******************************************************************************/
 
-/*************************************************************************************************/
 // function 5:
+/********************************************************************************/
 const getRecipeByName = (recipes, recipeName) => {
   const findAuthorRecipe = recipes.find((recipe) =>
     recipe.Name.includes(recipeName)
   );
   return findAuthorRecipe || null;
 };
+/********************************************************************************/
 
-/**************************************************************************************************/
 // function 6:
+/********************************************************************************/
 const getIngredientsFromRecipe = (recipes) => {
   return recipes.reduce((acc, recipe) => [...acc, ...recipe.Ingredients], []);
 };
+/********************************************************************************/
 
-/***************************************************************************************************/
 // Part 2
+/********************************************************************************/
 const displayMenu = () => {
   console.log("\nRecipe Management System Menu:");
   console.log("1. Show All Authors");
@@ -80,15 +89,16 @@ const displayMenu = () => {
   return parseInt(choice);
 };
 
-/***********************************************************************************************/
+// Capitalize Author Name
+/********************************************************************************/
 const capitalizeName = (name) => {
   return name
     .split(" ")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join(" ");
 };
+/********************************************************************************/
 
-/**********************************************************************************************/
 const savedRecipes = [];
 let choice;
 
@@ -96,49 +106,50 @@ do {
   choice = displayMenu();
 
   switch (choice) {
-    case 1:
-      console.log("\nList of all Authors:");
-      console.log(getUniqueAuthors(cakeRecipes));
+    case 1: {
+      const uniqueAuthors = getUniqueAuthors(cakeRecipes);
+      console.log(uniqueAuthors);
       break;
+    }
 
     case 2: {
-      const recipeList = [];
       const authorName = capitalizeName(prompt("Enter authors name: "));
-      const authorRecipes = getRecipesFromAuthor(cakeRecipes, authorName);
-      authorRecipes.forEach((recipe) => {
-        recipeList.push(recipe.Name);
-      });
-      console.log("\nRecipe List");
-      console.log(recipeList);
+      const recipesFromAuthor = getRecipesFromAuthor(cakeRecipes, authorName);
+      console.log(recipesFromAuthor);
       break;
     }
 
     case 3: {
       const ingredientName = prompt("Enter an ingredient: ");
-      console.log("\nRecipes based on ingredient");
-      console.log(getRecipeFromIngredient(cakeRecipes, ingredientName));
+      const recipeFromIngredient = getRecipeFromIngredient(
+        cakeRecipes,
+        ingredientName
+      );
+      console.log(recipeFromIngredient);
       break;
     }
 
     case 4: {
       const recipeName = prompt("Enter recipe name: ");
-      const getRecipe = getRecipeByName(cakeRecipes, recipeName);
-      if (getRecipe) {
-        console.log(getRecipe);
-        const saveRecipe = prompt(
-          "Would you like to save the Ingredients (Y/N)?: "
+      const recipeByName = getRecipeByName(cakeRecipes, recipeName);
+      if (recipeByName) {
+        console.log(recipeByName);
+        const saveRecipeIngredients = prompt(
+          "Would you like to save the Ingredients? (y/n): "
         ).toLowerCase();
-        if (saveRecipe === "y") {
-          savedRecipes.push(getRecipeByName(cakeRecipes, recipeName));
+        if (saveRecipeIngredients === "y") {
+          savedRecipes.push(recipeByName);
         }
       }
       break;
     }
 
-    case 5:
-      console.log("\nList of Ingredients");
-      console.log(getIngredientsFromRecipe(savedRecipes));
+    case 5: {
+      const ingredientsFromSavedRecipes =
+        getIngredientsFromRecipe(savedRecipes);
+      console.log(ingredientsFromSavedRecipes);
       break;
+    }
 
     case 6:
       getAllRecipeNames(cakeRecipes);
@@ -151,3 +162,5 @@ do {
       console.log("Invalid input. Please enter a number between 0 and 6.");
   }
 } while (choice !== 0);
+
+/********************************************************************************/
