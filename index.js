@@ -46,9 +46,6 @@ const getRecipeFromIngredient = (recipes, ingredient) => {
   filterRecipes.forEach((recipe) => {
     filteredRecipeList.push(recipe.Name);
   });
-  // for (const recipe of filterRecipes) {
-  //   filteredRecipeList.push(recipe.Name);
-  // }
   return filteredRecipeList;
 };
 console.log(getRecipeFromIngredient(cakeRecipes, "140g caster sugar"));
